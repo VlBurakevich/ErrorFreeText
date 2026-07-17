@@ -21,5 +21,8 @@ spring:
       hibernate:
         format_sql: true
 
+app:
+  yandex-speller-url: https://speller.yandex.net/services/spellservice.json/checkTexts
+
 server:
   port: 8080
