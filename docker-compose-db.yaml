@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: error-free-db
+    environment:
+      POSTGRES_DB: error_free
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - error_free_data:/var/lib/postgresql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d error_free"]
+volumes:
+  error_free_data:

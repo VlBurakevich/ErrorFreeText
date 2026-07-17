@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - error_free_data:/var/lib/postgresql/data
+      - error_free_data:/var/lib/postgresql
     networks:
       - app-network
     healthcheck:

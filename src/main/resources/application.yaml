@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: ErrorFreeText
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/error_free    #jdbc:postgresql://db:5432/error_free
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    enabled: true
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
