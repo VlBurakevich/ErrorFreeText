@@ -1,17 +1,10 @@
 package com.solution.errorfreetext.dto;
 
 import com.solution.errorfreetext.entity.TaskStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class TaskResponse {
-    private TaskStatus status;
-    private String correctedText;
-    private String errorMessage;
+public record TaskResponse(
+        TaskStatus status,
+        String correctedText,
+        String errorMessage
+) {
 }

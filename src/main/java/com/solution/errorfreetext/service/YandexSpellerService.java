@@ -71,9 +71,9 @@ public class YandexSpellerService {
             SpellerError[] errors = errorsResult[0];
             String correctedText = text;
             for (SpellerError error : errors) {
-                if (error.getS() != null && !error.getS().isEmpty()) {
-                    String firstSuggestion = error.getS().getFirst();
-                    correctedText = correctedText.replace(error.getWord(), firstSuggestion);
+                if (error.s() != null && !error.s().isEmpty()) {
+                    String firstSuggestion = error.s().getFirst();
+                    correctedText = correctedText.replace(error.word(), firstSuggestion);
                 }
             }
             return correctedText;

@@ -58,7 +58,7 @@ public class TaskService {
 
     @Transactional
     public Task startTaskProcessing(UUID taskId) {
-        Task task = taskRepository.findById(taskId)
+        Task task = taskRepository.findByIdForProcessing(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
         if (task.getStatus() != TaskStatus.CREATED) {

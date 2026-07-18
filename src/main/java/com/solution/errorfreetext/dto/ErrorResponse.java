@@ -1,17 +1,12 @@
 package com.solution.errorfreetext.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ErrorResponse {
-    private String errorMessage;
-    private int errorCode;
-    private String timestamp;
-    private String path;
+public record ErrorResponse(
+        String errorMessage,
+        int errorCode,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        String timestamp,
+        String path
+) {
 }
