@@ -19,10 +19,15 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        jdbc.batch_size: 25
+        order_inserts: true
         format_sql: true
 
 app:
-  yandex-speller-url: https://speller.yandex.net/services/spellservice.json/checkTexts
-
+  yandex-speller:
+    base-url: https://speller.yandex.net/services/spellservice.json/checkTexts
+    connect-timeout: 5000
+    read-timeout: 5000
+  scheduler.delay-ms: 5000
 server:
   port: 8080
