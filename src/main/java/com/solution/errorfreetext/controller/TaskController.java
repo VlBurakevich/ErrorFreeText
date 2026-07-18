@@ -23,18 +23,18 @@ import java.util.UUID;
 public class TaskController {
     private final TaskService taskService;
 
+    @GetMapping("/{id}")
+    public TaskResponse getTaskById(
+            @PathVariable UUID id
+    ) {
+        return taskService.getTaskById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CreateTaskResponse createTask(
             @Valid @RequestBody CreateTaskRequest createTaskRequest
     ) {
         return taskService.createTask(createTaskRequest);
-    }
-
-    @GetMapping("/{id}")
-    public TaskResponse getTaskById(
-            @PathVariable UUID id
-    ) {
-        return taskService.getTaskById(id);
     }
 }
