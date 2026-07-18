@@ -1,25 +1,19 @@
-CREATE TABLE languages
-(
-    id   VARCHAR(2) PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
-
 CREATE TABLE tasks
 (
-    id             UUID PRIMARY KEY,
+    id             UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     original_text  TEXT        NOT NULL,
     corrected_text TEXT,
-    language_id    VARCHAR(2)  NOT NULL,
+    language    VARCHAR(10)  NOT NULL,
     status         VARCHAR(20) NOT NULL,
     error_message  TEXT,
     created_at     TIMESTAMP   NOT NULL,
     updated_at     TIMESTAMP   NOT NULL,
-    CONSTRAINT fk_tasks_language FOREIGN KEY (language_id) REFERENCES languages (id)
+    CONSTRAINT chk_tasks_language CHECK (language IN ('RU', 'EN'))
 );
 
 CREATE TABLE task_chunks
 (
-    id                   UUID PRIMARY KEY,
+    id                   UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     task_id              UUID NOT NULL,
     sequence_number      INT  NOT NULL,
     chunk_text           TEXT NOT NULL,
