@@ -1,7 +1,7 @@
 package com.solution.errorfreetext.exception;
 
-public class SpellerIntegrationException extends RuntimeException {
-    public SpellerIntegrationException(String message, Throwable cause) {
-        super(message, cause);
+public class SpellerIntegrationException extends AppException {
+    public SpellerIntegrationException(Throwable cause) {
+        super(ErrorCode.YANDEX_SPELLER_TIMEOUT, cause);
     }
 }

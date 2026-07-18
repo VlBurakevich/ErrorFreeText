@@ -2,6 +2,7 @@ package com.solution.errorfreetext.service;
 
 import com.solution.errorfreetext.entity.Task;
 import com.solution.errorfreetext.entity.TaskChunk;
+import com.solution.errorfreetext.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -51,9 +52,12 @@ public class TaskProcessor {
 
             taskService.completeTask(taskId, correctedTextBuilder.toString());
             log.info("Task{} successfully processed", taskId);
-        } catch (Exception e) {
-            log.error("Error occurred while processing task {}", taskId, e);
+        } catch (AppException e) {
+            log.error("Business error during task processing {}", taskId, e);
             taskService.failTask(taskId, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error during task processing {}", taskId, e);
+            taskService.failTask(taskId, "An unexpected internal error occurred during text processing");
         }
     }
 }

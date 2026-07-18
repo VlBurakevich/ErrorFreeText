@@ -19,7 +19,7 @@ public class TaskMapper {
         Task task = new Task();
         task.setId(UUID.randomUUID());
         task.setOriginalText(request.text());
-        task.setLanguage(request.language() != null ? TextLanguage.valueOf(request.language().toUpperCase()) : null);
+        task.setLanguage(request.language() != null ? TextLanguage.parse(request.language().toUpperCase()) : null);
         task.setStatus(TaskStatus.CREATED);
 
         return task;

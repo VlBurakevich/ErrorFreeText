@@ -2,6 +2,7 @@ package com.solution.errorfreetext.service;
 
 import com.solution.errorfreetext.dto.SpellerError;
 import com.solution.errorfreetext.entity.TextLanguage;
+import com.solution.errorfreetext.exception.InvalidLanguageException;
 import com.solution.errorfreetext.exception.SpellerIntegrationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +45,10 @@ public class YandexSpellerService {
             return text;
         }
 
+        if (lang == null) {
+            throw new InvalidLanguageException("Language cannot be null");
+        }
+
         int options = 0;
         if (DIGITAL_PATTERN.matcher(text).matches()) {
             options += IGNORE_DIGITS;
@@ -53,33 +58,54 @@ public class YandexSpellerService {
         }
 
         try {
-            final int finalOptions = options;
-            SpellerError[][] errorsResult = restClient.post()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/checkTexts")
-                            .queryParam("lang", lang.toString())
-                            .queryParam("options", finalOptions)
-                            .build())
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .body("text=" + text)
-                    .retrieve()
-                    .body(SpellerError[][].class);
-            if (errorsResult == null || errorsResult.length == 0 || errorsResult[0].length == 0) {
+            SpellerError[] errors = sendSpellerRequest(text, lang, options);
+
+            if (errors == null || errors.length == 0) {
                 return text;
             }
 
-            SpellerError[] errors = errorsResult[0];
-            String correctedText = text;
-            for (SpellerError error : errors) {
-                if (error.s() != null && !error.s().isEmpty()) {
-                    String firstSuggestion = error.s().getFirst();
-                    correctedText = correctedText.replace(error.word(), firstSuggestion);
-                }
-            }
-            return correctedText;
+            return applyCorrections(text, errors);
         } catch (Exception e) {
             log.error("Yandex Speller request failed for text: {}", text, e);
-            throw new SpellerIntegrationException("Speller API integration error", e);
+            throw new SpellerIntegrationException(e);
         }
+    }
+
+    private SpellerError[] sendSpellerRequest(String text, TextLanguage lang, int options) {
+        SpellerError[][] errorsResult = restClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/checkTexts")
+                        .queryParam("lang", lang.name())
+                        .queryParam("options", options)
+                        .build())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body("text=" + text)
+                .retrieve()
+                .body(SpellerError[][].class);
+
+        if (errorsResult == null || errorsResult.length == 0 || errorsResult[0].length == 0) {
+            return new SpellerError[0];
+        }
+
+        return errorsResult[0];
+    }
+
+    private static String applyCorrections(String text, SpellerError[] errors) {
+        StringBuilder correctedText = new StringBuilder(text);
+
+        for (int i = errors.length - 1; i >= 0; i--) {
+            SpellerError error = errors[i];
+
+            if (error.s() != null && !error.s().isEmpty()) {
+                String firstSuggestion = error.s().getFirst();
+                int start = error.pos();
+                int end = start + error.len();
+
+                if (start >= 0 && end <= correctedText.length()) {
+                    correctedText.replace(start, end, firstSuggestion);
+                }
+            }
+        }
+        return correctedText.toString();
     }
 }

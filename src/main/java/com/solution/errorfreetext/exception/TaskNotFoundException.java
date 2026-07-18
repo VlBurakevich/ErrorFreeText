@@ -2,8 +2,8 @@ package com.solution.errorfreetext.exception;
 
 import java.util.UUID;
 
-public class TaskNotFoundException extends RuntimeException {
+public class TaskNotFoundException extends AppException {
     public TaskNotFoundException(UUID taskId) {
-        super(taskId.toString());
-    }//TODO rewrite
+        super(ErrorCode.TASK_NOT_FOUND, taskId);
+    }
 }
