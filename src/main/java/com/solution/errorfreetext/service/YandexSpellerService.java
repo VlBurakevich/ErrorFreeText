@@ -3,14 +3,20 @@ package com.solution.errorfreetext.service;
 import com.solution.errorfreetext.dto.SpellerError;
 import com.solution.errorfreetext.entity.TextLanguage;
 import com.solution.errorfreetext.exception.InvalidLanguageException;
-import com.solution.errorfreetext.exception.SpellerIntegrationException;
+import com.solution.errorfreetext.exception.SpellerInternalException;
+import com.solution.errorfreetext.exception.SpellerTimeoutException;
+import com.solution.errorfreetext.exception.SpellerUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -65,13 +71,21 @@ public class YandexSpellerService {
             }
 
             return applyCorrections(text, errors);
+        } catch (ResourceAccessException e) {
+            log.error("Yandex Speller timeout or network issue for text: {}", text, e);
+            throw new SpellerTimeoutException(e);
+        } catch (RestClientResponseException e) {
+            log.error("Yandex Speller returned status {} for text: {}", e.getStatusCode(), text, e);
+            throw new SpellerUnavailableException(e);
         } catch (Exception e) {
-            log.error("Yandex Speller request failed for text: {}", text, e);
-            throw new SpellerIntegrationException(e);
+            log.error("Unexpected error during Yandex Speller request for text: {}", text, e);
+            throw new SpellerInternalException(e);
         }
     }
 
     private SpellerError[] sendSpellerRequest(String text, TextLanguage lang, int options) {
+        String encodedText = URLEncoder.encode(text, StandardCharsets.UTF_8);
+
         SpellerError[][] errorsResult = restClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/checkTexts")
@@ -79,11 +93,11 @@ public class YandexSpellerService {
                         .queryParam("options", options)
                         .build())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body("text=" + text)
+                .body("text=" + encodedText)
                 .retrieve()
                 .body(SpellerError[][].class);
 
-        if (errorsResult == null || errorsResult.length == 0 || errorsResult[0].length == 0) {
+        if (errorsResult == null || errorsResult.length == 0 || errorsResult[0] == null || errorsResult[0].length == 0) {
             return new SpellerError[0];
         }
 

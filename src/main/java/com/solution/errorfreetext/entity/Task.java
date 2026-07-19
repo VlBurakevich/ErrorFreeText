@@ -42,7 +42,7 @@ public class Task {
     private String correctedText;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "language_id", nullable = false)
+    @Column(name = "language", nullable = false)
     private TextLanguage language;
 
     @Enumerated(EnumType.STRING)

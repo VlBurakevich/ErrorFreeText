@@ -16,3 +16,6 @@ services:
       test: ["CMD-SHELL", "pg_isready -U root -d error_free"]
 volumes:
   error_free_data:
+networks:
+  app-network:
+    driver: bridge

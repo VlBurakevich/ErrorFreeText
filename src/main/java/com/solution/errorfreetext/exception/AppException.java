@@ -3,7 +3,7 @@ package com.solution.errorfreetext.exception;
 import lombok.Getter;
 
 @Getter
-public class AppException extends RuntimeException {
+public abstract class AppException extends RuntimeException {
     private final ErrorCode errorCode;
 
     protected AppException(ErrorCode errorCode, Object... args) {

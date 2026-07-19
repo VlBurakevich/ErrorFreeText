@@ -6,8 +6,8 @@ import java.time.OffsetDateTime;
 
 public record ErrorResponse(
         String errorMessage,
-        String errorCode,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+        int errorCode,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
         OffsetDateTime timestamp,
         String path
 ) {

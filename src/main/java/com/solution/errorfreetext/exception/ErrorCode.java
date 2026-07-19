@@ -17,7 +17,8 @@ public enum ErrorCode {
     YANDEX_SPELLER_UNAVAILABLE(50201, HttpStatus.BAD_GATEWAY, "Yandex Speller API is unavailable or returned an error"),
     YANDEX_SPELLER_TIMEOUT(50202, HttpStatus.BAD_GATEWAY, "Timeout waiting for Yandex Speller response"),
 
-    INTERNAL_SERVER_ERROR(50000, HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+    INTERNAL_SERVER_ERROR(50000, HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred"),
+    YANDEX_SPELLER_INTERNAL_ERROR(50001, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error during text correction: %s");
 
     private final int code;
     private final HttpStatus httpStatus;

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(AppException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAppException(AppException ex, HttpServletRequest request) {
         ErrorCode err = ex.getErrorCode();
         String path = request.getRequestURI();
 
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> buildResponse(ErrorCode err, String message, String path) {
         ErrorResponse response = new ErrorResponse(
                 message,
-                err.name(),
+                err.getCode(),
                 OffsetDateTime.now(),
                 path
         );
