@@ -29,7 +29,7 @@ public class TaskTextSplitter {
             if (end >= length) {
                 end = length;
             } else {
-                int lastSpace = text.lastIndexOf(' ', end);
+                int lastSpace = text.lastIndexOf(' ', end - 1);
 
                 if (lastSpace > start) {
                     end = lastSpace + 1;

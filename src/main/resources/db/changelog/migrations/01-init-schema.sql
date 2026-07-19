@@ -6,8 +6,8 @@ CREATE TABLE tasks
     language    VARCHAR(10)  NOT NULL,
     status         VARCHAR(20) NOT NULL,
     error_message  TEXT,
-    created_at     TIMESTAMP   NOT NULL,
-    updated_at     TIMESTAMP   NOT NULL,
+    created_at     TIMESTAMPTZ   NOT NULL,
+    updated_at     TIMESTAMPTZ   NOT NULL,
     CONSTRAINT chk_tasks_language CHECK (language IN ('RU', 'EN'))
 );
 

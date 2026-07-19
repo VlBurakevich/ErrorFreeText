@@ -88,7 +88,6 @@ public class YandexSpellerService {
 
         SpellerError[][] errorsResult = restClient.post()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/checkTexts")
                         .queryParam("lang", lang.name())
                         .queryParam("options", options)
                         .build())
