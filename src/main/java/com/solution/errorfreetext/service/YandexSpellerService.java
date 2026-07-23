@@ -87,12 +87,8 @@ public class YandexSpellerService {
         String encodedText = URLEncoder.encode(text, StandardCharsets.UTF_8);
 
         SpellerError[][] errorsResult = restClient.post()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("lang", lang.name())
-                        .queryParam("options", options)
-                        .build())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body("text=" + encodedText)
+                .body("text=" + encodedText + "&lang=" + lang.name() + "&options=" + options)
                 .retrieve()
                 .body(SpellerError[][].class);
 

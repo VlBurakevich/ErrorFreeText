@@ -2,6 +2,7 @@ package com.solution.errorfreetext.service;
 
 import com.solution.errorfreetext.entity.Task;
 import com.solution.errorfreetext.entity.TaskChunk;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,7 +11,13 @@ import java.util.List;
 @Component
 public class TaskTextSplitter {
 
-    private static final int MAX_CHUNK_SIZE = 10000;
+    private final int maxChunkSize;
+
+    public TaskTextSplitter(
+            @Value("${app.text-splitter.max-chunk-size:10000}") int maxChunkSize
+    ) {
+        this.maxChunkSize = maxChunkSize;
+    }
 
     public List<TaskChunk> split(Task task) {
         String text = task.getOriginalText();
@@ -24,7 +31,7 @@ public class TaskTextSplitter {
         int sequenceNumber = 1;
 
         while (start < length) {
-            int end = start + MAX_CHUNK_SIZE;
+            int end = start + maxChunkSize;
 
             if (end >= length) {
                 end = length;

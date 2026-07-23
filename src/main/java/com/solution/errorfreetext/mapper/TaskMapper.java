@@ -7,8 +7,6 @@ import com.solution.errorfreetext.entity.TaskStatus;
 import com.solution.errorfreetext.entity.TextLanguage;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class TaskMapper {
     public Task mapToNewTask(CreateTaskRequest request) {
@@ -17,7 +15,6 @@ public class TaskMapper {
         }
 
         Task task = new Task();
-        task.setId(UUID.randomUUID());
         task.setOriginalText(request.text());
         task.setLanguage(request.language() != null ? TextLanguage.parse(request.language().toUpperCase()) : null);
         task.setStatus(TaskStatus.CREATED);

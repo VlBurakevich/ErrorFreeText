@@ -29,5 +29,7 @@ app:
     connect-timeout: 5000
     read-timeout: 5000
   scheduler.delay-ms: 5000
+  text-splitter:
+    max-chunk-size: 10000
 server:
   port: 8080
